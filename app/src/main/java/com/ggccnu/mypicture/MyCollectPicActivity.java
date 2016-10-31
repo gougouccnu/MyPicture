@@ -19,7 +19,7 @@ import cn.bmob.v3.listener.FindListener;
 
 import static android.widget.LinearLayout.HORIZONTAL;
 
-public class MainActivity extends AppCompatActivity {
+public class MyCollectPicActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private RecyclerView rvMyPictures;
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
 
         rvMyPictures = (RecyclerView) findViewById(R.id.rv_myPic);
-        mLayoutManager = new LinearLayoutManager(MainActivity.this, HORIZONTAL, false);
+        mLayoutManager = new LinearLayoutManager(MyCollectPicActivity.this, HORIZONTAL, false);
         rvMyPictures.setLayoutManager(mLayoutManager);
     }
 
@@ -49,13 +49,13 @@ public class MainActivity extends AppCompatActivity {
         BmobQuery<picInf> picturesBmobQuery = new BmobQuery<>();
         picturesBmobQuery.order("createdAt");
         picturesBmobQuery.setLimit(15);
-        picturesBmobQuery.addWhereEqualTo("user", "JLkR444G");
-        picturesBmobQuery.findObjects(MainActivity.this, new FindListener<picInf>() {
+        picturesBmobQuery.addWhereEqualTo("starter", "JLkR444G");
+        picturesBmobQuery.findObjects(MyCollectPicActivity.this, new FindListener<picInf>() {
             @Override
             public void onSuccess(List<picInf> list) {
                 if (list != null && list.size() > 0) {
                     mMyPicList.addAll(list);
-                    mPictureAdapter = new PictureAdapter(mMyPicList, MainActivity.this);
+                    mPictureAdapter = new PictureAdapter(mMyPicList, MyCollectPicActivity.this);
                     rvMyPictures.setAdapter(mPictureAdapter);
                     mPictureAdapter.setOnItemClickLitener(new PictureAdapter.OnItemClickLitener() {
                         @Override
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onItemLongClick(View view, int position) {
                             // 跳转到article详细页面
-                            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                            Intent intent = new Intent(MyCollectPicActivity.this, SecondActivity.class);
                             intent.putExtra("itemUrl", mMyPicList.get(position).getItemUrl());
                             startActivity(intent);
                         }
