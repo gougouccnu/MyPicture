@@ -1,10 +1,12 @@
 package com.ggccnu.mypicture;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.ggccnu.mypicture.Model.picInf;
@@ -63,6 +65,20 @@ public class MainActivity extends AppCompatActivity {
                     mMyPicList.addAll(list);
                     mPictureAdapter = new PictureAdapter(mMyPicList, MainActivity.this);
                     rvMyPictures.setAdapter(mPictureAdapter);
+                    mPictureAdapter.setOnItemClickLitener(new PictureAdapter.OnItemClickLitener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+
+                        }
+
+                        @Override
+                        public void onItemLongClick(View view, int position) {
+                            // 跳转到article详细页面
+                            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                            intent.putExtra("itemUrl", mMyPicList.get(position).getItemUrl());
+                            startActivity(intent);
+                        }
+                    });
                 }
                 Log.d(TAG, "query new Articles onSuccess");
             }
