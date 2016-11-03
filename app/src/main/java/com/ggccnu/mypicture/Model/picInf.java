@@ -17,7 +17,9 @@ public class picInf extends BmobObject {
         this.starter = starter;
         this.user = user;
     }
+    public picInf() {
 
+    }
     public void setStarter(MyUser starter) {
         this.starter = starter;
     }

@@ -48,7 +48,7 @@ public class MyCollectPicActivity extends AppCompatActivity {
 
         BmobQuery<picInf> picturesBmobQuery = new BmobQuery<>();
         picturesBmobQuery.order("createdAt");
-        picturesBmobQuery.setLimit(15);
+        picturesBmobQuery.setLimit(50);
         picturesBmobQuery.addWhereEqualTo("starter", "JLkR444G");
         picturesBmobQuery.findObjects(MyCollectPicActivity.this, new FindListener<picInf>() {
             @Override
