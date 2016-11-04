@@ -1,10 +1,12 @@
 package com.ggccnu.mypicture;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
         rvMyPictures = (RecyclerView) findViewById(R.id.rv_myPic);
         mLayoutManager = new LinearLayoutManager(MainActivity.this, HORIZONTAL, false);
+        LinearSnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(rvMyPictures);
         rvMyPictures.setLayoutManager(mLayoutManager);
     }
 
@@ -71,10 +75,6 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onItemLongClick(View view, final int position) {
-                            // 跳转到article详细页面
-//                            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-//                            intent.putExtra("itemUrl", mMyPicList.get(position).getItemUrl());
-//                            startActivity(intent);
                             String itemMsg = "收藏该宝贝";
 
                             MyUser starter = mMyPicList.get(position).getStarter();
@@ -85,19 +85,25 @@ public class MainActivity extends AppCompatActivity {
                             final String items[] = {itemMsg, "查看淘宝网页"};
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
                             //builder.setTitle("提示"); //设置标题
-
                             //builder.setMessage("是否确认退出?"); //设置内容
-
                             //builder.setIcon(R.mipmap.ic_launcher);//设置图标，图片id即可
-
                             //设置列表显示，注意设置了列表显示就不要设置builder.setMessage()了，否则列表不起作用。
-                            builder.setItems(items,new DialogInterface.OnClickListener() {
+                            builder.setItems(items, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    UpdatePicStarter(mMyPicList.get(position).getObjectId(), mMyPicList.get(position).getUser().getObjectId(),isCollected);
-                                    //UpdatePicItemUrl(mMyPicList.get(position).getObjectId(),"");
+                                    switch (which) {
+                                        case 0:
+                                            UpdatePicStarter(mMyPicList.get(position).getObjectId(), mMyPicList.get(position).getUser().getObjectId(),isCollected);
+                                            //UpdatePicItemUrl(mMyPicList.get(position).getObjectId(),"");
+                                            break;
+                                        case 1:
+                                            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                                            intent.putExtra("itemUrl", mMyPicList.get(position).getItemUrl());
+                                            startActivity(intent);
+                                        default:
+                                            break;
+                                    }
                                 }
                             });
 
@@ -109,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
 //                                }
 //                            });
                             builder.create().show();
-
                         }
                     });
                 }
