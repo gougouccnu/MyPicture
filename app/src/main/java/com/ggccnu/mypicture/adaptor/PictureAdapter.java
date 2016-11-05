@@ -12,11 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.common.logging.FLog;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.ggccnu.mypicture.Model.picInf;
 import com.ggccnu.mypicture.R;
 
@@ -52,7 +57,7 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         Uri uri = Uri.parse(mPicList.get(position).getPicUrl());
-        holder.iv_pic.setImageURI(uri);
+        //holder.iv_pic.setImageURI(uri);
 
         ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
             @Override
@@ -84,6 +89,21 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.ViewHold
                 FLog.e(getClass(), throwable, "Error loading %s", id);
             }
         };
+
+        int width = 200, height = 200;
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                .setResizeOptions(new ResizeOptions(width, height))
+                .build();
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setTapToRetryEnabled(true)
+                .setOldController(holder.iv_pic.getController())
+                .setImageRequest(request)
+                .setControllerListener(controllerListener)
+                .build();
+
+        holder.iv_pic.setController(controller);
+
         // 如果设置了回调，则设置点击事件
         if (mOnItemClickLitener != null)
         {

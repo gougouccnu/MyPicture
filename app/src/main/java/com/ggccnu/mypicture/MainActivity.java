@@ -5,9 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -23,13 +22,11 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 
-import static android.widget.LinearLayout.HORIZONTAL;
-
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private RecyclerView rvMyPictures;
-    private LinearLayoutManager mLayoutManager;
+    private RecyclerView.LayoutManager mLayoutManager;
     private List<picInf> mMyPicList = new ArrayList<>();
     private PictureAdapter mPictureAdapter;
     private boolean isCollected = true;
@@ -47,9 +44,10 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
 
         rvMyPictures = (RecyclerView) findViewById(R.id.rv_myPic);
-        mLayoutManager = new LinearLayoutManager(MainActivity.this, HORIZONTAL, false);
-        LinearSnapHelper snapHelper = new LinearSnapHelper();
-        snapHelper.attachToRecyclerView(rvMyPictures);
+        //mLayoutManager = new LinearLayoutManager(MainActivity.this, HORIZONTAL, false);
+        mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        //LinearSnapHelper snapHelper = new LinearSnapHelper();
+        //snapHelper.attachToRecyclerView(rvMyPictures);
         rvMyPictures.setLayoutManager(mLayoutManager);
     }
 
@@ -70,7 +68,9 @@ public class MainActivity extends AppCompatActivity {
                     mPictureAdapter.setOnItemClickLitener(new PictureAdapter.OnItemClickLitener() {
                         @Override
                         public void onItemClick(View view, int position) {
-
+                            Intent intent = new Intent(MainActivity.this, BigPictureActivity.class);
+                            intent.putExtra("picUrl", mMyPicList.get(position).getPicUrl());
+                            startActivity(intent);
                         }
 
                         @Override
